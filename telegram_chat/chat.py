@@ -38,13 +38,18 @@ def json_digest():
                 usr_lst.append((  msg["from_id"], msg["from"]))
                 if type(msg["text"]) == str:
                     msg_lst.append((msg["id"], msg["date"], msg["from_id"], msg["text"].replace("'", "+")))
-                    print("str")
+                    #print("str")
                 if type(msg["text"]) == list:
-                    msg_lst.append((msg["id"], msg["date"], msg["from_id"], msg["text"]["text"].replace("'", "+")))
-                    print("list")
+                    try:
+                        msg_lst.append((msg["id"], msg["date"], msg["from_id"], msg["text"][0]["text"].replace("'", "+")))
+                    except:
+                        msg_lst.append((msg["id"], msg["date"], msg["from_id"], msg["text"][1]["text"].replace("'", "+")))
+                    #print(msg["text"][0]["text"])
 
             except Exception as e:
-                print(e)
+                print("append: ", e, msg)
+        else:
+            print("not a message.")
     """
     print(set(usr_lst))
     for item in msg_lst:
@@ -52,12 +57,12 @@ def json_digest():
     """
 
 def insert_usr():
-    for usr in usr_lst:
+    for usr in list(set(usr_lst)):
         try:
             cur.execute(f"""INSERT INTO Users ('usr_id', 'usr_name') VALUES(?,?)""", usr)
             #conn.commit()
         except Exception as e:
-            print(e)
+            print(e, "usr")
 
 def insert_msg():
     for msg in msg_lst:
@@ -65,7 +70,7 @@ def insert_msg():
             cur.execute(f"INSERT INTO Messages (msg_id, msg_date, from_id, msg_txt) VALUES({msg[0]}, '{msg[1]}', {msg[2]}, '{msg[3]}')")
             #conn.commit()
         except Exception as e:
-            print(e,msg[3])
+            print(e)
 
 table_create()
 json_digest()
