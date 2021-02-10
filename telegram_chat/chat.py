@@ -57,12 +57,10 @@ def json_digest():
     """
 
 def insert_usr():
-    for usr in list(set(usr_lst)):
-        try:
-            cur.execute(f"""INSERT INTO Users ('usr_id', 'usr_name') VALUES(?,?)""", usr)
-            #conn.commit()
-        except Exception as e:
-            print(e, "usr")
+    try:
+        cur.executemany(f"INSERT INTO Users (usr_id, usr_name) VALUES (?,?)", list(set(usr_lst)))
+    except:
+        return
 
 def insert_msg():
     for msg in msg_lst:
