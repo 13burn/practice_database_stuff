@@ -10,7 +10,7 @@ def db_reader():
         #cur.fetchmany(<limit>)
         #cur.fetchall()
         for entry in cur.fetchmany(50):
-            print(f"{entry[1]}\t{entry[5]}\t\t{entry[3]}")#this reads the date, sander name and message
+            print(f"{entry[1].rjust(10)} > {entry[5].rjust(25)}: {entry[3].ljust(10)}")#this reads the date, sander name and message
     except:
         print("can't read table")
 
